@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>For Rina 💌</title>
+
+<style>
+:root{
+  --pink:#ff2f78;
+  --pink2:#ff6aa2;
+  --purple:#6d28d9;
+  --paper:#fffdf8;
+}
+
+*{box-sizing:border-box}
+
+body{
+  margin:0;
+  min-height:100vh;
+  display:grid;
+  place-items:center;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial;
+  background: radial-gradient(circle at top, #fff, #ffd6e3 40%, #ff9dbb);
+}
+
+/* ===== WRAP ===== */
+.wrap{
+  width:min(920px,95vw);
+  padding:18px;
+  border-radius:26px;
+  background:rgba(255,255,255,.75);
+  box-shadow:0 25px 70px rgba(0,0,0,.18);
+  backdrop-filter: blur(10px);
+}
+
+/* ===== ENVELOPE (more realistic) ===== */
+.envelope{
+  width:min(720px,94vw);
+  height:min(520px,72vh);
+  margin:0 auto;
+  position:relative;
+  border-radius:26px;
+  overflow:hidden;
+  cursor:pointer;
+  user-select:none;
+  background:linear-gradient(#fff,#f4f4f4);
+  border:1px solid rgba(0,0,0,.08);
+  box-shadow:0 30px 90px rgba(0,0,0,.22);
+}
+
+/* Pocket */
+.pocket{
+  position:absolute; left:0; right:0; bottom:0;
+  height:62%;
+  background:linear-gradient(#fff,#f1f1f1);
+  border-top:1px solid rgba(0,0,0,.08);
+  z-index:2;
+}
+
+/* Side folds */
+.foldL,.foldR{
+  position:absolute; bottom:0;
+  width:52%; height:66%;
+  background:#fff;
+  z-index:3;
+}
+.foldL{left:0; clip-path:polygon(0 0,100% 58%,0 100%)}
+.foldR{right:0; clip-path:polygon(100% 0,100% 100%,0 58%)}
+
+/* Top flap */
+.flap{
+  position:absolute; left:0; right:0; top:0;
+  height:60%;
+  background:linear-gradient(#fff,#eee);
+  clip-path:polygon(0 0,100% 0,50% 78%);
+  transform-origin:top;
+  transition:.9s cubic-bezier(.2,.9,.2,1);
+  z-index:6;
+}
+
+/* Heart seal */
+.tapHeart{
+  position:absolute;
+  left:50%; top:56%;
+  transform:translate(-50%,-50%);
+  width:120px; height:120px;
+  border-radius:999px;
+  background:linear-gradient(135deg,var(--pink),var(--pink2));
+  box-shadow:0 22px 44px rgba(255,47,120,.35);
+  display:grid;
+  place-items:center;
+  z-index:7;
+}
+.tapHeart span{
+  color:white;
+  font-weight:1000;
+  text-align:center;
+  line-height:1.1;
+}
+.tapHeart .big{font-size:24px}
+
+/* ===== LETTER ===== */
+.letter{
+  position:absolute;
+  left:18px; right:18px;
+  bottom:18px;
+  height:82%;
+  background:linear-gradient(var(--paper),#fff7fb);
+  border-radius:18px;
+  border:1px solid rgba(0,0,0,.08);
+  box-shadow:0 18px 50px rgba(0,0,0,.12);
+  padding:18px;
+  transform:translateY(130%);
+  opacity:0;
+  transition:.95s cubic-bezier(.2,.9,.2,1);
+  z-index:5;
+  overflow:auto;
+}
+
+.letterTop{
+  display:flex;
+  justify-content:space-between;
+  font-weight:900;
+  margin-bottom:10px;
+}
+
+.tapHint{
+  font-size:13px;
+  font-weight:900;
+  opacity:.55;
+  display:none;
+  margin-bottom:8px;
+  user-select:none;
+}
+
+.letterBody{
+  white-space:pre-line;
+  line-height:1.9;
+  font-size:16px;
+  font-weight:650;
+  color:#222;
+}
+
+.sign{
+  margin-top:14px;
+  font-weight:900;
+  display:none;
+}
+
+.inside{
+  margin-top:14px;
+  padding-top:12px;
+  border-top:1px solid rgba(0,0,0,.1);
+}
+
+/* ===== QUESTION ===== */
+.question{display:none}
+.btnArena{
+  display:flex;
+  gap:12px;
+  position:relative;
+  flex-wrap:wrap;
+  align-items:center;
+}
+
+button{
+  padding:12px 16px;
+  border:none;
+  border-radius:14px;
+  font-weight:900;
+  cursor:pointer;
+  user-select:none;
+}
+.yes{background:linear-gradient(135deg,var(--pink),var(--pink2)); color:white}
+.no{background:linear-gradient(135deg,var(--purple),#a78bfa); color:white}
+
+/* Kick FX */
+.yesKick{animation:yesKick .4s forwards}
+@keyframes yesKick{50%{transform:translateX(28px)}}
+.yesMega{animation:yesMega .5s forwards}
+@keyframes yesMega{to{transform:translateX(18px) scale(1.55)}}
+
+.noFly{animation:noFly .8s forwards}
+@keyframes noFly{to{transform:translateX(700px) rotate(20deg); opacity:0}}
+
+.shake{animation:shake .25s}
+@keyframes shake{
+  25%{transform:translateX(-6px)}
+  50%{transform:translateX(6px)}
+  75%{transform:translateX(-4px)}
+}
+
+/* Hide buttons after YES */
+.hideButtons{
+  opacity:0;
+  pointer-events:none;
+  transform:scale(.95);
+  transition:.3s ease;
+}
+
+/* ===== VIDEO + LOVE TEXT ===== */
+.videoWrap{
+  display:none;                 /* shown after YES */
+  margin-top:16px;
+  align-items:center;
+  gap:14px;
+  justify-content:center;
+  flex-wrap:wrap;
+}
+
+.videoWrap video{
+  width:260px;                  /* smaller video */
+  max-width:90%;
+  border-radius:14px;
+  box-shadow:0 14px 30px rgba(0,0,0,.18);
+  background:#000;
+  display:block;
+}
+
+.loveText{
+  font-size:18px;
+  font-weight:900;
+  color:var(--pink);
+  white-space:nowrap;
+}
+
+/* Open state */
+.open .flap{transform:rotateX(160deg)}
+.open .tapHeart{opacity:0; pointer-events:none}
+.open .letter{transform:translateY(0); opacity:1}
+</style>
+</head>
+
+<body>
+<div class="wrap">
+  <div class="envelope" id="env">
+    <div class="flap"></div>
+
+    <div class="tapHeart" id="tapHeart">
+      <span class="big">❤</span>
+      <span>tap here</span>
+    </div>
+
+    <div class="letter" id="letter">
+      <div class="letterTop">
+        <div>Dear Rina,</div>
+        <div>💌</div>
+      </div>
+
+      <div class="tapHint" id="tapHint">tap the letter to continue…</div>
+
+      <div class="letterBody" id="text"></div>
+      <div class="sign" id="sign">— Nitish</div>
+
+      <div class="inside">
+        <div class="question" id="q">
+          <h2 style="margin:0 0 10px;">Will you be my Valentine?</h2>
+          <div class="btnArena" id="arena">
+            <button class="yes" id="yes">Yes 💗</button>
+            <button class="no" id="no">No</button>
+          </div>
+        </div>
+
+        <div class="videoWrap" id="videoBox">
+          <video autoplay muted loop playsinline>
+            <source src="video.mp4" type="video/mp4">
+            Your browser doesn’t support video playback.
+          </video>
+          <div class="loveText"> hehehehe i love you &lt;3</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="pocket"></div>
+    <div class="foldL"></div>
+    <div class="foldR"></div>
+  </div>
+</div>
+
+<script>
+  const pages = [
+`I wanted to do something a little different for you.
+
+Not because I had to,
+but because I wanted to.`,
+
+`I made this for you to show you how much time,
+thought, and care I’m willing to put into us.`,
+
+`You mean more to me than I’m always able to say.
+
+You’re the light in my life,
+and being with you makes everything feel better.`,
+
+`So before anything else,
+I just wanted you to know that.`
+  ];
+
+  let opened=false, page=0, waiting=false, typing=false;
+
+  const env=document.getElementById("env");
+  const letter=document.getElementById("letter");
+  const text=document.getElementById("text");
+  const hint=document.getElementById("tapHint");
+  const q=document.getElementById("q");
+  const sign=document.getElementById("sign");
+
+  function typeText(str,done){
+    let i=0; typing=true; text.textContent="";
+    const t=setInterval(()=>{
+      text.textContent += str[i++] || "";
+      if(i>=str.length){
+        clearInterval(t);
+        typing=false;
+        done();
+      }
+    }, 32); // slower
+  }
+
+  function showPage(){
+    if(page>=pages.length){
+      hint.style.display="none";
+      sign.style.display="block";
+      q.style.display="block";
+      return;
+    }
+    typeText(pages[page], ()=>{
+      waiting=true;
+      hint.style.display="block";
+    });
+  }
+
+  env.onclick=()=>{
+    if(opened) return;
+    opened=true;
+    env.classList.add("open");
+    setTimeout(showPage, 450);
+  };
+
+  // tap letter to continue (no auto-advance)
+  letter.onclick=()=>{
+    if(!waiting || typing) return;
+    waiting=false;
+    hint.style.display="none";
+    page++;
+    showPage();
+  };
+
+  const yes=document.getElementById("yes");
+  const no=document.getElementById("no");
+  const arena=document.getElementById("arena");
+  const videoBox=document.getElementById("videoBox");
+
+  let kicked=false;
+
+  no.onclick=()=>{
+    if(kicked) return;
+    kicked=true;
+    q.classList.add("shake");
+    yes.classList.add("yesKick");
+    no.classList.add("noFly");
+    setTimeout(()=>yes.classList.add("yesMega"), 400);
+    setTimeout(()=>{ try{ no.remove(); }catch(e){} }, 800);
+  };
+
+  yes.onclick=()=>{
+    // hide buttons, keep letter + message visible
+    arena.classList.add("hideButtons");
+
+    // show smaller looping video + love text
+    videoBox.style.display="flex";
+    videoBox.scrollIntoView({behavior:"smooth", block:"center"});
+  };
+</script>
+</body>
+</html>
